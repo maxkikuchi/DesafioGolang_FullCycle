@@ -9,13 +9,13 @@ WORKDIR /app
 
 ### Copy Go application dependency files
 COPY go.mod .
-
+COPY main.go .
 
 ### Setting a proxy for downloading modules
 ENV GOPROXY https://proxy.golang.org,direct
 
 ### Download Go application module dependencies
-RUN go mod download
+#RUN go mod download
 
 ### Copy actual source code for building the application
 COPY . .
@@ -26,7 +26,10 @@ ENV CGO_ENABLED=0
 
 ### Build the Go app for a linux OS
 ### 'scratch' and 'alpine' both are Linux distributions
-RUN GOOS=linux go build ./main.go
+#RUN GOOS=linux go build ./main.go
+# flag "-w" removing the debugging information included in the executable
+RUN go install && \ 
+    go build -ldflags "-w"
 
 ##### Stage 2 #####
 
